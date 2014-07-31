@@ -14,21 +14,45 @@
 // Given target = 3, return true.
 
 public class Solution {
-    public boolean searchMatrix(int[][] matrix, int target) {
-        int row = matrix.length;
+    // public boolean searchMatrix(int[][] matrix, int target) {
+    //     int row = matrix.length;
 
-        if(row == 0) return false;
+    //     if(row == 0) return false;
 
-        int col = matrix[0].length;
+    //     int col = matrix[0].length;
 
-        for(int i = 0; i < row; i++){
-        	if(matrix[i][col - 1] >= target){
-        		for(int j = 0; j < col; j++){
-        			if(matrix[i][j] == target){
-        				return true;
-        			}
-        		}
-        	}
+    //     for(int i = 0; i < row; i++){
+    //      if(matrix[i][col - 1] >= target){
+    //          for(int j = 0; j < col; j++){
+    //              if(matrix[i][j] == target){
+    //                  return true;
+    //              }
+    //          }
+    //      }
+    //     }
+
+    //     return false;
+    // }
+
+    public boolean searchMatrix(int[][] grid, int target) {
+        if(grid.length == 0) return false;
+
+        int row = grid.length;
+        int col = grid[0].length;
+
+        int start = 0;
+        int end = row * col - 1;
+
+        while(start <= end){
+            int index = (start + end ) / 2;
+            int value = grid[index / col][index % col];
+            if(value == target){
+                return true;
+            }else if (value > target){
+                end = index - 1;
+            }else{
+                start = index + 1;
+            }
         }
 
         return false;
