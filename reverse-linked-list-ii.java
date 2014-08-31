@@ -21,7 +21,40 @@
  * }
  */
 public class Solution {
-    public ListNode reverseBetween(ListNode head, int m, int n) {
-        
+    public ListNode reverseBetween(ListNode head, int m, int n) {	
+    	if(head == null || head.next == null || m == n) return head;
+    	ListNode dummy = new ListNode(0);
+    	dummy.next = head;
+    	ListNode runner = dummy;
+
+    	for(int i = 0; i < m - 1; i++){
+    		runner = runner.next;
+    		if(runner == null) return dummy.next;
+    	}
+
+    	ListNode start = runner.next;
+    	ListNode end = start;
+    	for(int i = 0; i < (n - m); i++){
+    		end = end.next;
+    		if(end == null) return dummy.next;
+    	}
+
+    	runner.next = reverse(start, end);
+    	return dummy.next;
+    }
+
+    public ListNode reverse(ListNode start, ListNode end){
+    	ListNode finalEnd = end.next;
+    	ListNode pre = start;
+    	ListNode curr = start.next;
+
+    	while(curr != finalEnd){
+    		ListNode next = curr.next;
+    		curr.next = pre;
+    		pre = curr;
+    		curr = next;
+    	}
+    	start.next = finalEnd;
+    	return end;
     }
 }
