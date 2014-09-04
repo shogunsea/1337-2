@@ -81,8 +81,13 @@ public class Solution {
 
 
     // iterative solution: the bottom-up fashion of merge sort.
-    // sort the list by k steps each time, k starts from 2, each time increase by 
-    // 2 times, i.e. k = 2, 4, 8, etc. 
+    // sort the list by k steps each time, k starts from 2, each time double k's
+    // value, i.e. k = 2, 4, 8, etc. For each step value k, scan the list from 
+    // head then sort the k nodes starting from current starting node, during
+    // the reordering process remember to remain the list integrity by recovering
+    // connection to original ending node. outer while loop takes O(logN), inner
+    // takes O(n), total O(nlogn) time. Since this is iteration, local variable and
+    // stack allocation is O(1), so the space complexity is also O(1).
     public ListNode sortList(ListNode head) {
         if(head == null || head.next == null){
             return head;
@@ -95,13 +100,17 @@ public class Solution {
         while(true){
             int run = 0;
 
+            // each iteration starts from the first node.
             ListNode start = dummy;
 
+            // null list or sub list with single node is alreay sorted.
             while(start != null && start.next != null){
                 start = sortSubList(start, step);
                 run++;
             }
 
+            // when the list is fully sorted, start will point to last
+            // element after first iteration.
             if(run <= 1){
                 break;
             }
@@ -113,36 +122,31 @@ public class Solution {
     }
 
     public ListNode sortSubList(ListNode node, int subLen){
-        if(node == null || node.next == null){
+        // should not process null node.
+        if(node == null){
             return null;
         }
 
         ListNode leftStart = node.next;
         ListNode leftEnd = move(leftStart, subLen / 2 - 1);
         
-        // for(int i = 0; i < subLen / 2 - 1; i++){
-        //     leftEnd = leftEnd == null? leftEnd : leftEnd.next; 
-        // }
-
+        // sublist length smaller than current step, invalid.
+        // since left half should be valid and none empty,
+        // while right half could be empty.
         if(leftEnd == null){
             return null;
         }
 
         ListNode rightStart = leftEnd.next;
+        // split sublists to avoid infinite loop.
         leftEnd.next = null;
+        // right half could be empty.
         ListNode rightEnd = move(rightStart, subLen / 2 - 1);
-
-        // if(rightStart == null){
-        //     return null;
-        // }
-
-        // for(int j = 0; j < subLen / 2 - 1; j++){
-        //     rightEnd = rightEnd == null? rightEnd : rightEnd.next;
-        // }
-
         ListNode endNode = rightEnd == null? rightEnd : rightEnd.next;
         
         if(endNode != null){
+            // if right half is not the end of the original list,
+            // should split it from the rest of the original list.
             rightEnd.next = null;
         }
 
@@ -157,7 +161,7 @@ public class Solution {
                 node = node.next;
             }
         }
-
+        // recover the connection to the rest of input list.
         node.next = endNode;
 
         return node;
@@ -167,40 +171,7 @@ public class Solution {
         while(node != null && step-- > 0){
             node = node.next;
         }
-        
+
         return node;
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        
