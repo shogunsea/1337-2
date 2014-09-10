@@ -52,26 +52,51 @@ public class Solution {
     //     return list;
     // }
 
-    public ArrayList<Integer> getRow(int rowIndex) {
-        ArrayList<Integer> rst = new ArrayList<Integer>();
-        rowIndex += 1;
-        if (rowIndex == 0) {
-            return rst;
-        }
 
-        rst.add(1);
-        for (int i = 1; i < rowIndex; i++) {
-            ArrayList<Integer> tmp = new ArrayList<Integer>();
-            for (int j = 0; j < i + 1; j++) {
-                tmp.add(1);
-            }
-            tmp.set(0, rst.get(0));
-            tmp.set(i, rst.get(i - 1));
-            for (int j = 1; j < i; j++) {
-                tmp.set(j, rst.get(j - 1) + rst.get(j));
-            }
-            rst = tmp;
+    // creat k lists.
+    // public ArrayList<Integer> getRow(int rowIndex) {
+    //     ArrayList<Integer> rst = new ArrayList<Integer>();
+    //     rowIndex += 1;
+    //     if (rowIndex == 0) {
+    //         return rst;
+    //     }
+
+    //     rst.add(1);
+    //     for (int i = 1; i < rowIndex; i++) {
+    //         ArrayList<Integer> tmp = new ArrayList<Integer>();
+    //         for (int j = 0; j < i + 1; j++) {
+    //             tmp.add(1);
+    //         }
+    //         tmp.set(0, rst.get(0));
+    //         tmp.set(i, rst.get(i - 1));
+    //         for (int j = 1; j < i; j++) {
+    //             tmp.set(j, rst.get(j - 1) + rst.get(j));
+    //         }
+    //         rst = tmp;
+    //     }
+    //     return rst;
+    // }
+
+    // using one list of k size.
+    public List<Integer> getRow(int rowIndex) {
+        List<Integer> result = new ArrayList<Integer>();
+        
+        if(rowIndex < 0){
+            return result;
         }
-        return rst;
+        
+        for(int i = 0; i <= rowIndex; i++){
+            result.add(0);
+        }
+        
+        result.set(0, 1);
+        
+        for(int i = 1; i <= rowIndex; i++){
+            for(int j = i; j > 0; j--){
+                result.set(j, result.get(j) + result.get(j - 1));
+            }
+        }
+        
+        return result;
     }
 }
