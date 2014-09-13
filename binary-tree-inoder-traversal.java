@@ -1,14 +1,3 @@
-// Given a binary tree, return the inorder traversal of its nodes' values.
-
-// For example:
-// Given binary tree {1,#,2,3},
-//    1
-//     \
-//      2
-//     /
-//    3
-// return [1,3,2].
-
 /**
  * Definition for binary tree
  * public class TreeNode {
@@ -19,70 +8,76 @@
  * }
  */
 public class Solution {
-    public ArrayList<Integer> inorderTraversal(TreeNode root) {
-    	ArrayList<Integer> list = new ArrayList<Integer>();
-    	
-    	if(root == null){
-    		return	list;
-    	}
-    	Set<TreeNode> visited = new HashSet<TreeNode>();
-    	Stack<TreeNode> stack = new Stack<TreeNode>();
-    	TreeNode tmp = null;
-    	stack.push(root);
-    	visited.add(root);
-
-    	while(!stack.isEmpty()){
-    		if(stack.peek().left!=null){
-    			if(visited.contains(stack.peek().left)){
-    				tmp = stack.pop();
-    				list.add(tmp.val);
-    				visited.add(tmp);
-    				if(tmp.right != null){
-	    				stack.push(tmp.right); 
-    				}
-    			}else{
-	    			stack.push(stack.peek().left);
-    			}
-    		}else{
-    			tmp = stack.pop();
-    			visited.add(tmp);
-    			list.add(tmp.val);
-    			if(tmp.right!=null){
-    			    stack.push(tmp.right);
-    			}
-    		}
-    	}
-
- //    	return list;
-	// }
-
-	// public ArrayList<Integer> inorderTraversal(TreeNode root){
-	// 	ArrayList<Integer> list = new ArrayList<Integer>();
-
-	// 	if(root == null){
-	// 		return list;
-	// 	}
-
-	// 	Stack<TreeNode> stack = new Stack<TreeNode>();
-	// 	TreeNode current = root;
-
-	// 	while(!stack.isEmpty() || current != null){
-	// 		if(current!=null){
-	// 			stack.push(current);
-	// 			current = current.left;
-	// 		}else{
-	// 			current = stack.pop();
-	// 			list.add(current.val);
-	// 			current = current.right;
-	// 		}
-	// 	}
-
-	// 	return list;
-	// }
+    // threaded binary tree solution(morris traversal)
+    // time : O(N), space : O(1)
+    // public List<Integer> inorderTraversal(TreeNode root) {
+    //     List<Integer> res = new ArrayList<Integer>();
+    //     if(root == null){
+    //         return res;
+    //     }
+        
+    //     TreeNode current = root, previous = null;
+    //     while(current != null){
+    //         if(current.left == null){
+    //             res.add(current.val);
+    //             previous = current;
+    //             current= current.right;
+    //         }else{
+    //             TreeNode rightMost = current.left;
+    //             while(rightMost.right != null && rightMost.right != current){
+    //                 rightMost = rightMost.right;
+    //             }
+    //             if(rightMost.right == null){
+    //                 rightMost.right = current;
+    //                 previous = current;
+    //                 current = current.left;
+    //             }else{
+    //                 res.add(current.val);
+    //                 previous = current;
+    //                 rightMost.right = null;
+    //                 current = current.right;
+    //             }
+    //         }
+    //     }
+    //     return res;
+    // }
+    
+    // recursive approach.
+    // time: T(n) = 2T(n/2) + o(1) --> T(n) = O(n)
+    //Space: O(logN) stack in memory.
+    // public List<Integer> inorderTraversal(TreeNode root) {
+    //     List<Integer> res = new ArrayList<Integer>();
+    //     dfsHelper(res, root);
+    //     return res;
+    // }
+    
+    // public void dfsHelper(List<Integer> res, TreeNode node){
+    //     if(node == null){
+    //         return;
+    //     }
+        
+    //     dfsHelper(res, node.left);
+    //     res.add(node.val);
+    //     dfsHelper(res, node.right);
+    // }
+    
+    // iteration solution using stack.
+    // time O(n) space O(n)
+    public List<Integer> inorderTraversal(TreeNode root) {
+        List<Integer> res = new ArrayList<Integer>();
+        Stack<TreeNode> inOrderStack = new Stack<TreeNode>();
+        TreeNode current = root;
+        
+        while(!inOrderStack.isEmpty() || current != null){
+            if(current != null){
+                inOrderStack.push(current);
+                current = current.left;
+            }else{
+                current = inOrderStack.pop();
+                res.add(current.val);
+                current = current.right;
+            }
+        }
+        return res;
+    }
 }
-
-
-
-
-
-
