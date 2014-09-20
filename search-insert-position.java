@@ -10,22 +10,29 @@
 
 public class Solution {
     public int searchInsert(int[] A, int target) {
- 		int pos = 0;
-
- 		for(int i = 0; i < A.length; i++){
- 			if(A[i] == target){
- 				return i;
- 			}
-
- 			if(A[i] > target){
- 				return pos;
- 			}
-
- 			if(A[i] < target){
- 				pos = i + 1;
- 			}
- 		}      
-
- 		return pos; 
+        int len = A.length;
+        if(len == 0){
+            return 0;
+        }
+        int start = 0;
+        int end = len - 1;
+        while(start + 1 < end){
+            int mid = start + (end - start) / 2;
+            if(A[mid] == target){
+                return mid;
+            }else if(A[mid] < target){
+                start = mid;
+            }else{
+                end = mid;
+            }
+        }
+        
+        if(A[end] < target){
+            return end + 1;
+        }else if(A[start] >= target){
+            return start;
+        }else{
+            return start + 1;
+        }
     }
 }
