@@ -75,3 +75,53 @@ public class Solution {
 // 4453
 // 4435
 
+
+public class Solution {
+    public void nextPermutation(int[] num) {
+        int len = num.length;
+        if(len == 0){
+            return;
+        }
+        
+        // left index: starting from end, first element that is smaller 
+        // than its right elemnt.
+        // right index: after we found left index, we find the smallest right element.
+        int left = -1;
+        int right = -1;
+        for(int i = len - 2; i >= 0; i--){
+            if(num[i] < num[i + 1]){
+                // i should be left index.
+                left = i;
+                // search for right index.
+                right = left + 1;
+                for(int j = i + 1; j < len; j++){
+                    if(num[j] > num[left]){
+                        right = j;
+                    }
+                }
+                break;
+            }
+        }
+        
+        if(left == -1){
+            // if all array is decreasing: 321 -> 123, reverse the whole array
+            reverse(num, 0, len - 1);
+        }else{
+            swap(num, left, right);
+            reverse(num, left + 1, len - 1);
+        }
+    }
+    
+    public void swap(int[] num, int left, int right){
+        num[left] ^= num[right];
+        num[right] ^= num[left];
+        num[left] ^= num[right];
+    }
+    
+    public void reverse(int[] num, int start, int end){
+        while(start < end){
+            swap(num, start++, end--);
+        }
+    }
+}
+
