@@ -38,3 +38,40 @@ public class Solution {
     	return new String(chars);
 	}
 }
+
+public class Solution {
+    public String convert(String s, int nRows) {
+        int len = s.length();
+        if (len == 0 || nRows == 1) {
+            return s;
+        }
+        
+        List<StringBuilder> res = new ArrayList<StringBuilder>();
+        for (int i = 0; i < nRows; i++) {
+            res.add(new StringBuilder());
+        }
+        
+        int cycle = (nRows - 1) * 2;
+        
+        for (int i = 0; i < len; i++) {
+            int pos = i % cycle;
+            if (pos < nRows) {
+                res.get(pos).append(s.charAt(i));
+            } else {
+                // offSet is pos's mirror index regarding to the bottom.
+                int offSet = 2 * (nRows - 1) - pos;
+                res.get(offSet).append(s.charAt(i));
+            }
+        }
+        
+        StringBuilder sb = new StringBuilder();
+        for (StringBuilder temp : res) {
+            sb.append(temp.toString());
+        }
+        
+        return sb.toString();
+    }
+}
+            
+        
+        
