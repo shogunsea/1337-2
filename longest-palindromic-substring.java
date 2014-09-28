@@ -10,7 +10,7 @@ public class Solution {
     	int len = s.length();
 
     	int max = 0;
-    	int oddLen, evenLen, curLen, pos;
+    	int oddLen = 0, evenLen = 0, curLen = 0, pos = 0;
     	for(int i = 0; i < len; i++){
     		oddLen = palinLen(s, i, i);
 
@@ -48,3 +48,45 @@ public class Solution {
     	return len;
     }
 }
+
+
+public class Solution {
+    public String longestPalindrome(String s) {
+        int len = s.length();
+        if (len == 0) {
+            return "";
+        } else if (len == 1) {
+            return s;
+        }
+        
+        String res = "";
+        int maxLen = 0;
+        
+        // iterate through s, each char as center, find longest palindrome.
+        for (int i = 0; i < len; i++) {
+            String tempString = palinHelper(s, i, i);
+            if (tempString.length() > maxLen) {
+                maxLen = tempString.length();
+                res = tempString;
+            }
+            
+            tempString = palinHelper(s, i, i + 1);
+            if (tempString.length() > maxLen) {
+                maxLen = tempString.length();
+                res = tempString;
+            }
+        }
+        
+        return res;
+    }
+    
+    public String palinHelper(String s, int start, int end) {
+        while (start >= 0 && end <= s.length() - 1 && s.charAt(start) == s.charAt(end)) {
+            start--;
+            end++;
+        }
+        
+        return s.substring(start + 1, end);
+    }
+}        
+        
