@@ -1,41 +1,35 @@
 public class Solution {
-    public boolean isMatch(String s, String p) {
-    	if(p.equals(".*") || s.length() == 0){
-    		return true;
-    	}else if(p.length() == 0){
-    	    return false;
-    	}
-
-    	int sLen = s.length();
-    	int pLen = p.length();
-    	boolean[][] dp = new boolean[sLen][pLen];
-
-    	if(s.charAt(0) == p.charAt(0) || p.charAt(0) == '.'){
-    		dp[0][0] = true;
-    	}
-    	
-
-    	for(int i = 0; i < sLen; i++){
-    		for(int j = 0; j < pLen; j++){
-    			if( j == 0){
-    				continue;
-    			}
-
-    			boolean conditionOne = (p.charAt(j - 1) == s.charAt(i) && p.charAt(j) == '*') || (p.charAt(j - 1) == '*' && p.charAt(j) == s.charAt(i));
-
-    			if(i == 0){
-    				if(conditionOne){
-    					dp[i][j] = true;
-    				}
-    				continue;
-    			}
-
-    			boolean	charMatch = s.charAt(i) == p.charAt(j) || p.charAt(j) == '.';
-    			boolean conditionTwo = dp[i - 1][j - 1] && charMatch;
-    			dp[i][j] = conditionTwo || conditionOne;
-    		}
-    	}
-
-    	return dp[sLen - 1][pLen - 1];
-	}
+    public boolean isMatch(String s, String p) { 
+        return matchHelper(s, p, 0, 0);
+    }
+    
+    public boolean matchHelper(String s, String p, int sIndex, int pIndex) {
+        if (pIndex == p.length()) {
+            return sIndex == s.length();
+        }
+        if (pIndex == p.length() - 1) {
+            return sIndex == s.length() - 1 && (p.charAt(pIndex) == s.charAt(sIndex) || p.charAt(pIndex) == '.');
+        }
+        if (pIndex + 1 < p.length() && p.charAt(pIndex + 1) != '*') {
+            if (sIndex == s.length()) {
+                return false;
+            }
+            if (p.charAt(pIndex) == s.charAt(sIndex) || p.charAt(pIndex) == '.') {
+                return matchHelper(s, p, sIndex + 1, pIndex + 1);
+            } else {
+                return false;
+            }
+        } else {
+            // try to cover all chars in s that can be matched by first two chars in p
+            while ( sIndex < s.length() && pIndex < p.length() && (p.charAt(pIndex) == s.charAt(sIndex) || p.charAt(pIndex) == '.' )) {
+                if (matchHelper(s, p, sIndex, pIndex + 2)) {
+                    return true;
+                }
+                sIndex++;
+            }
+            
+            return matchHelper(s, p, sIndex, pIndex + 2);
+        }
+    }
 }
+        
