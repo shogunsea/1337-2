@@ -1,67 +1,62 @@
-// Given a string s and a dictionary of words dict, add spaces in s to construct a sentence where each word is a valid dictionary word.
-
-// Return all such possible sentences.
-
-// For example, given
-// s = "catsanddog",
-// dict = ["cat", "cats", "and", "sand", "dog"].
-
-// A solution is ["cats and dog", "cat sand dog"].
-
-
 public class Solution {
     public List<String> wordBreak(String s, Set<String> dict) {
-        List<String> result = new ArrayList<String>();
+        List<String> res = new ArrayList<String>();
         StringBuilder sb = new StringBuilder();
-
-		if(s.length()==0||dict.size()==0){
-     		return result;
-     	}
-
-     	int len = s.length();
-     	boolean[] splitPoint = new boolean[len+1];
-     	splitPoint[0] = true;
-
-     	for(int i = 1; i<=len; i++){
-     		for(int j = 0; j<i; j++){
-     			String tempString = s.substring(j,i);
-     			if(splitPoint[j]&&dict.contains(tempString)){
-     				splitPoint[i]  = true;
-     				break;
-     			}
-
-     		}
-     	}
-
-     	if(splitPoint[len]==false){
-     		return result;
-     	}
-
-        dfs(result, sb, s, dict, 0);
-
-        return result;
+        
+        if (!checkValid(s, dict)) {
+            return res;
+        }
+        
+        // try all possible indexes and substirng length.
+        dfsHelper(s, dict, res, sb, 0);
+        
+        return res;
     }
-
-    public void dfs(List<String> result, StringBuilder sb, String s, Set<String> dict, int index){
-    	if(index == s.length()){
-    		String match = sb.toString();
-    		result.add(match);
-    		return;
-    	}
-
-    	for(int i = index + 1; i <= s.length(); i++){
-    		String tempString = s.substring(index, i);
-    		if(dict.contains(tempString)){
-    			int currentLength = sb.length();
-
-    			if(currentLength == 0){
-    				sb.append(tempString);
-    			}else{
-    				sb.append(" " + tempString);
-    			}
-    			dfs(result, sb, s, dict, i);
-    			sb.delete(currentLength, sb.length());
-    		}
-    	}
+    
+    public boolean checkValid(String s, Set<String> dict) {
+        int len = s.length();
+        if (len == 0 || dict == null || dict.size() == 0) {
+            return false;
+        }
+        
+        boolean[] splitPoint = new boolean[len + 1];
+        splitPoint[0] = true;
+        
+        // the string s can be split in unexpected ways, the first time 
+        // u found a valid cut at (i,j) doesnt meaning, u can find valid
+        // cuts in (j,...), so u have to iterate over all possible indexes,
+        // which takes o(n2).
+        for (int i = 0; i < len; i++) {
+            for (int j = i + 1; j <= len; j++) {
+                if (splitPoint[i] && dict.contains(s.substring(i, j))) {
+                    splitPoint[j] = true;
+                }
+            }
+        }
+        
+        return splitPoint[len];
+    }
+    
+    public void dfsHelper(String s, Set<String> dict, List<String> res, StringBuilder sb, int index) {
+        if (index == s.length()) {
+            res.add(sb.toString());
+            return;
+        }
+        
+        for (int i = index + 1; i <= s.length(); i++) {
+            String sub = s.substring(index, i);
+            if (dict.contains(sub)) {
+                int sbLen = sb.length();
+                if (sbLen == 0) {
+                    sb.append(sub);
+                } else {
+                    sb.append(' ');
+                    sb.append(sub);
+                }
+                dfsHelper(s, dict, res, sb, i);
+                // backtracking, revert sb to original state
+                sb.delete(sbLen, sb.length());
+            }
+        }
     }
 }
