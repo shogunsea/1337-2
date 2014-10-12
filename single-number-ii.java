@@ -23,31 +23,51 @@ public class Solution {
 
     // Bit manipulation version. O(n) time, O(1) space.
 	public int singleNumber(int[] A) {
-		// absorb singular bits, i.e. this var keeps bits info of elements that has shown up only once,
-		// if same elem came second time, its bits info are cleard and stored in var 'twos'. Similarly, if same
-		// elem show up for the third time, 'ones' will store this occurrence, while previous two occurs are
-		// stored in 'twos', combining bits info in 'ones' and 'twos' will tell us whether elements have shown
-		// up three times.
-        int ones = 0;
-        // only store bits info of elems that have shown up twice.
+		int ones = 0;
         int twos = 0;
-        // only store bits info of elems that have shown up three times.
         int threes = 0;
-        // tmp var that store bits of elems that show up for the second time.
         int one2two = 0;
 
         for(int i : A){
-        	one2two = i & ones;
-        	twos |= one2two;
-        	// XOR clear the same bits, so if bits of same element show up twice, the bits info of that
-        	// element will be abandoned.
-        	ones ^= i;
-             //if both once and twice(once &twice) saved a certain bit,it means this bit appears three times.
-            threes= ~(ones&twos);
-            //clear the bit locations which appear three times
-            ones &= threes;
-            twos &= threes;
+            one2two = i & ones;
+            twos = twos | one2two;
+            ones ^= i;
+            threes = (ones & twos);
+            ones = ones&(~threes);
+            twos = twos&(~threes);
         }
+        return ones;
+    }
+}
+
+public class Solution {
+    public int singleNumber(int[] A) {
+        // look at all the numbers from a bitwise perspective,
+        // iterate over all integers, we extract the bits info and 
+        // store them in three variables:
+        // ones: all bits that appear once so far.
+        // twos: bits appear twice so far.
+        // threes: bits appear three times so far.
+        // we keep update bits info, at last, ones have value of the single number.
+        int ones = 0;
+        int twos = 0;
+        int threes = 0;
+        
+        for (int i = 0; i < A.length; i++) {
+            // ones ^= num;
+            // 1 + 1 = 2;
+            // 1 + 2 = 3;
+            // which bits info to update first:
+            // XOR on ones will lose info of carry. so we update twos first, then 
+            // update ones, update threes based on ones and twos.
+            twos = twos | (ones & A[i]);
+            ones = ones ^ A[i];
+            threes = ones & twos;
+            // clear threes bits from ones and twos.
+            ones = (~threes) & ones;
+            twos = (~threes) & twos;
+        }
+        
         return ones;
     }
 }
