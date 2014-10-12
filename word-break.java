@@ -26,3 +26,34 @@ public class Solution {
         return splitPoint[s.length()];
     }
 }
+
+
+ // public boolean wordBreak(String s, Set<String> dict) {
+ //        // recursive approach: in each recursion, iterate over
+ //        // all dict words, if starting from current index, the substring
+ //        // is same as dict word, go down to next level recursion, if it 
+ //        // returns true then current recursion also returns true.
+ //        return dfsHelper(s, dict, 0);
+ //    }
+    
+ //    public boolean dfsHelper(String s, Set<String> dict, int start) {
+ //        if (start == s.length()) {
+ //            return true;
+ //        }
+        
+ //        for (String word : dict) {
+ //            int wordLen = word.length();
+ //            int index = wordLen + start;
+ //            if (index > s.length()) {
+ //                continue;
+ //            }
+            
+ //            if (s.substring(start, index).equals(word)) {
+ //                if (dfsHelper(s, dict, index)) {
+ //                    return true;
+ //                }
+ //            }
+ //        }
+        
+ //        return false;
+ //    }
