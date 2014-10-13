@@ -1,53 +1,101 @@
-// Given two words (start and end), and a dictionary, find the length of shortest transformation sequence from start to end, such that:
+public class Solution {
+    public int ladderLength(String start, String end, Set<String> dict) {
+        Queue<Integer> steps = new LinkedList<Integer>();
+        Queue<String> queue = new LinkedList<String>();
+        Set<String> visited = new HashSet<String>();
+        visited.add(start);
+        queue.add(start);
+        steps.add(1);
 
-// Only one letter can be changed at a time
-// Each intermediate word must exist in the dictionary
-// For example,
+        while (!queue.isEmpty()) {
+            String word = queue.poll();
+            int step = steps.poll();
 
-// Given:
-// start = "hit"
-// end = "cog"
-// dict = ["hot","dot","dog","lot","log"]
-// As one shortest transformation is "hit" -> "hot" -> "dot" -> "dog" -> "cog",
-// return its length 5.
+            char[] chars = word.toCharArray();
+            for (int i = 0; i < word.length(); i++) {
+                char c = chars[i];
+                for (char a = 'a'; a <= 'z'; a++) {
+                    if (a == c) {
+                        continue;
+                    }
 
-// Note:
-// Return 0 if there is no such transformation sequence.
-// All words have the same length.
-// All words contain only lowercase alphabetic characters.
+                    chars[i] = a;
+                    String newWord = new String(chars);
+                    if (dict.contains(newWord) && !visited.contains(newWord)) {
+                        if (newWord.equals(end)) {
+                            return step + 1;
+                        }
+
+                        visited.add(newWord);
+                        steps.add(step + 1);
+                        queue.add(newWord);
+                    }
+                }
+                chars[i] = c;
+            }
+        }
+
+        return 0;
+    }
+}
 
 
 public class Solution {
     public int ladderLength(String start, String end, Set<String> dict) {
+        Map<String, Set<String>> graph = new HashMap<String, Set<String>>();
+        Queue<String> queue = new LinkedList<String>();
         Set<String> visited = new HashSet<String>();
-        Queue<String> words = new LinkedList<String>();
-        Queue<Integer> steps = new LinkedList<Integer>();
+        queue.add(end);
+        visited.add(end);
+        int len = start.length();
+        boolean reachedStart = false;
+        // use bfs to build a graph, that maps each sting to possible alterations.
+        while (!queue.isEmpty()) {
+            String oldWord = queue.poll();
+            char[] chars = oldWord.toCharArray();
+            for (int i = 0; i < len; i++) {
+                char c = chars[i];
+                for (char a = 'a'; a <= 'z'; a++) {
+                    if (a == c) {
+                        continue;
+                    }
+                    chars[i] = a;
+                    String newWord = new String(chars);
+                    if (dict.contains(newWord) && !visited.contains(newWord)) {
+                        visited.add(newWord);
+                        if (newWord.equals(start)) {
+                            reachedStart = true;
+                        }
+                        if (!graph.containsKey(newWord)) {
+                            graph.put(newWord, new HashSet<String>());
+                        }
+                        graph.get(newWord).add(oldWord);
+                        queue.add(newWord);
+                    }
+                }
+                chars[i] = c;
+            }
 
-        visited.add(start);
-        words.add(start);
-        steps.add(1);
-
-        while(!words.isEmpty()){
-        	String word = words.poll();
-        	int step = steps.poll();
-        	if(word.equals(end)){
-        		return step;
-        	}
-
-        	for(int i = 0; i < word.length(); i++){
-        		char[] chars = word.toCharArray();
-        		for(char c = 'a'; c <= 'z'; c++){
-        			if(c == chars[i]) continue;
-        			chars[i] = c;
-        			String tempString = new String(chars);
-        			if(dict.contains(tempString) && !visited.contains(tempString)){
-        				visited.add(tempString);
-        				words.add(tempString);
-        				steps.add(step + 1);
-        			}
-        		}
-        	}
+            if (reachedStart) {
+                break;
+            }
         }
-        return 0;
+
+        if (!reachedStart) {
+            return 0;
+        }
+
+        int minLen = 1;
+        String runner = start;
+
+        while (!runner.equals(end)) {
+            minLen++;
+            for (String s : graph.get(runner)) {
+                runner = s;
+                break;
+            }
+        }
+
+        return minLen;
     }
 }
