@@ -56,3 +56,35 @@ public class Solution {
  		return res;
     }
 }
+
+
+public class Solution {
+    public int maxProfit(int[] prices) {
+    	int len = prices.length;
+    	if (len == 0) {
+    		return 0;
+    	}
+
+    	int[] leftProfit = new int[len];
+    	int min = prices[0];
+    	int tempProfit = 0;
+
+    	for (int i = 1; i < len; i++) {
+    		min = min < prices[i]? min : prices[i];
+    		tempProfit = tempProfit > (prices[i] - min)? tempProfit : (prices[i] - min);
+    		leftProfit[i] = tempProfit;
+    	}
+
+    	int globalMax = 0;
+    	tempProfit = 0;
+    	int max = prices[len - 1];
+
+    	for (int i = len - 2; i >= 0; i--) {
+    		max = max > prices[i]? max : prices[i];
+    		tempProfit = tempProfit > (max - prices[i])? tempProfit : (max - prices[i]);
+    		globalMax = globalMax > (tempProfit + leftProfit[i])? globalMax : (tempProfit + leftProfit[i]);
+    	}
+
+    	return globalMax;
+    }
+}
