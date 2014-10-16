@@ -1,83 +1,81 @@
 public class Solution {
     public List<List<String>> findLadders(String start, String end, Set<String> dict) {
-    	List<List<String>> result = new ArrayList<List<String>>();
-    	if(dict == null || dict.size() == 0) return result;
+        List<List<String>> res = new ArrayList<List<String>>();
+        List<String> tempList = new ArrayList<String>();
+        Map<String, Set<String>> graph = buildGraph(start, end, dict);
+        if (graph == null) {
+            return  res;
+        }
 
-    	HashMap<String, Set<String>> graph = new HashMap<String, Set<String>>();
+        tempList.add(start);
+        retrievePath(graph, res, tempList, start, end);
 
-    	buildGraphBFS(graph, start, end, dict);
-
-    	List<String> tempList = new ArrayList<String>();
-
-    	if(graph.containsKey(start)){
-    		tempList.add(start);
-    	}
-
-    	getPathsDFS(graph, start, dict, result, tempList);
-
-    	return result;
+        return res;
     }
 
-    private void buildGraphBFS(HashMap<String, Set<String>> graph, String sink, String source, Set<String> dict){
-    	Set<String> previous = null;
-    	Set<String> current = new HashSet<String>();
-    	current.add(source);
-    	boolean reachedSink = false;
-
-    	while(!current.isEmpty()){
-    		Set<String> newLevel = new HashSet<String>();
-
-    		for(String word : current){
-    			char[] chars = word.toCharArray();
-    			for(int i = 0; i < chars.length; i++){
-    				char c = chars[i];
-    				for(char rep = 'a'; rep <= 'z'; rep++){
-    					if(rep == c) continue;
-    					chars[i] = rep;
-
-    					String newWord = new String(chars);
-
-    					if(newWord.equals(sink)) reachedSink = true;
-
-    					if(!newWord.equals(sink)&&!dict.contains(newWord) || current.contains(newWord) || previous != null && previous.contains(newWord)){
-    						continue;
-    					}
-
-    					if(!graph.containsKey(newWord)){
-    						graph.put(newWord, new HashSet<String>());
-    					}
-
-    					newLevel.add(newWord);
-    					graph.get(newWord).add(word);
-    				}
-    				chars[i] = c;
-    			}
-    		}
-
-    		if(newLevel.isEmpty()) break;
-
-    		previous = current;
-    		current = newLevel;
-    	}
-
-    	if(!reachedSink){
-    		graph.clear();
-    	}
+    public void retrievePath(Map<String, Set<String>> graph, List<List<String>> res, List<String> tempList, String start, String end) {
+        for (String s : graph.get(start)) {
+            tempList.add(s);
+            if (s.equals(end)) {
+                res.add(new ArrayList<String>(tempList));
+            } else {
+                retrievePath(graph, res, tempList, s, end);
+            }
+            tempList.remove(tempList.size() - 1);
+        }
     }
 
-    //getPathsDFS(graph, start, end, dict, result, tempList);
-    private void getPathsDFS(HashMap<String, Set<String>> graph, String nextWord, Set<String> dict, List<List<String>> result, List<String> tempList){
-    	if(!graph.containsKey(nextWord)){
-    		if(tempList.size() != 0){
-    			result.add(new ArrayList<String>(tempList));
-    		}
-    		return;
-    	}
 
-    	for(String word : graph.get(nextWord)){
-    		tempList.add(word);
-    		getPathsDFS(graph, word, dict, result, tempList);
-    		tempList.remove(tempList.size() - 1);
-    	}
+    public Map<String, Set<String>> buildGraph(String sink, String source, Set<String> dict) {
+        Map<String, Set<String>> graph = new HashMap<String, Set<String>>();
+        // starting from the source, which is the 'end' string, each step change 
+        // one character in the string, if its valid dict word and is not dups with
+        // previous level, add it to the next level, and create
+        // a map from that string to possible strings it can be transformed to.
+        Set<String> previous = new HashSet<String>();
+        Set<String> current = new HashSet<String>();
+        boolean reachedSink = false;
+        current.add(source);
+
+        while (!current.isEmpty()) {
+            Set<String> nextLevel = new HashSet<String>();
+            for (String s : current) {
+                char[] ss = s.toCharArray();
+                for (int i = 0; i < ss.length; i++) {
+                    char c = ss[i];
+                    for (char a = 'a'; a <= 'z'; a++) {
+                        if (a == c) {
+                            continue;
+                        }
+
+                        ss[i] = a;
+                        String tempString = new String(ss);
+                        if (dict.contains(tempString) && !previous.contains(tempString) && !current.contains(tempString)) {
+                            // dont check if current contains the string or not here. 
+                            nextLevel.add(tempString);
+                            if (!graph.containsKey(tempString)) {
+                                graph.put(tempString, new HashSet<String>());
+                            }
+                            // create mapping record.
+                            graph.get(tempString).add(s);
+                            if (tempString.equals(sink)) {
+                                reachedSink = true;
+                            }
+                        }
+                    }
+                    // revert char array back
+                    ss[i] = c;
+                }
+            }
+            previous = current;
+            current = nextLevel;
+        }
+
+        if (reachedSink) {
+            return graph;
+        } else {
+            return null;
+        }
     }
+
 }
