@@ -51,3 +51,51 @@ public class Solution {
     	return node;
     }
 }
+
+
+/**
+ * Definition for binary tree
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode(int x) { val = x; }
+ * }
+ */
+public class Solution {
+    public TreeNode buildTree(int[] preorder, int[] inorder) {
+        int len = preorder.length;
+        if (len == 0) {
+            return null;
+        }
+
+        return buildHelper(preorder, inorder, 0, len - 1, 0, len - 1);
+    }
+
+    public TreeNode buildHelper(int[] preorder, int[] inorder, int preStart, int preEnd, int inStart, int inEnd) {
+        if (preStart > preEnd) {
+            return null;
+        }
+
+        TreeNode root = new TreeNode(preorder[preStart]);
+        int rootIndex = 0;
+
+        for (int i = inStart; i <= inEnd; i++) {
+            if (inorder[i] == preorder[preStart]) {
+                rootIndex = i;
+                break;
+            }
+        }
+
+        int leftSize = rootIndex - inStart;
+        int rightSize = inEnd - rootIndex;
+        // inorder index range is easy: left : (inStart, rootIndex - 1),  right: (rootIndex + 1, inEnd)
+        // preorder needs calculation. left: (preStart + 1, preStart + leftSize), right : (preEnd - rightSize + 1, preEnd)
+        root.left = buildHelper(preorder, inorder, preStart + 1, preStart + leftSize, inStart, rootIndex - 1);
+        root.right = buildHelper(preorder, inorder, preEnd - rightSize + 1, preEnd, rootIndex + 1, inEnd);
+
+        return root;
+    }
+}
+
+
