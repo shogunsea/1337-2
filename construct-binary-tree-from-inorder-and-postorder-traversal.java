@@ -1,7 +1,42 @@
-// Given inorder and postorder traversal of a tree, construct the binary tree.
-
-// Note:
-// You may assume that duplicates do not exist in the tree.
+// //Definition for binary tree
+//  public class TreeNode {
+//      int val;
+//      TreeNode left;
+//      TreeNode right;
+//      TreeNode(int x) { val = x; }
+//  }
+ 
+public class Solution {
+    public TreeNode buildTree(int[] inorder, int[] postorder) {
+       int iLen = inorder.length;
+       int pLen = postorder.length;
+       if(iLen != pLen){
+           return null;
+       }
+       
+       return helper(inorder, postorder, 0, iLen - 1, 0, pLen - 1);
+    }
+    
+    public TreeNode helper(int[] inorder, int[] postorder, int iStart, int iEnd, int pStart, int pEnd){
+        if(iStart > iEnd || pStart > pEnd){
+            return null;
+        }
+        
+        TreeNode root = new TreeNode(postorder[pEnd]);
+        int mid = 0;
+        for(int i = iStart; i <= iEnd; i++){
+            if(postorder[pEnd] == inorder[i]){
+                mid = i;
+                break;
+            }
+        }
+        
+        // root.left = helper(inorder, postorder, iStart, mid - 1, pStart, pStart + (mid - iStart) - 1);
+        root.left = helper(inorder, postorder, iStart, mid - 1, pStart, pEnd - (iEnd - mid) - 1);
+        root.right = helper(inorder, postorder, mid + 1, iEnd, pStart + (mid - iStart), pEnd - 1);
+        return root;
+    }
+}
 
 /**
  * Definition for binary tree
@@ -14,48 +49,35 @@
  */
 public class Solution {
     public TreeNode buildTree(int[] inorder, int[] postorder) {
-    	// similar to the solution in the preorder one, this time
-    	// in the postorder, last element always represent the root node.
-    	int iLen = inorder.length;
-    	int pLen = postorder.length;
-    	if(iLen != pLen || iLen == 0) return null;
-
-    	return helper(inorder, postorder, 0, iLen - 1, pLen - 1);
+        int len = inorder.length;
+        if (len == 0) {
+            return null;
+        }
+        
+        return buildHelper(inorder, postorder, 0, len - 1, 0, len - 1);
     }
-
-    public TreeNode helper(int[] inorder, int[] postorder, int iStart, int iEnd, int pIndex){
-    	if(iStart > iEnd) return null;
-    	if(iStart == iEnd) return new TreeNode(inorder[iStart]);
-
-    	int mid = 0;
-
-    	for(int i = iStart; i <= iEnd; i++){
-    		if(postorder[pIndex] == inorder[i]){
-    			mid = i;
-    			break;
-    		}
-    	}
-
-    	TreeNode node = new TreeNode(inorder[mid]);
-    	node.left = helper(inorder, postorder, iStart, mid - 1, pIndex - (iEnd - mid + 1));
-    	node.right = helper(inorder, postorder, mid + 1, iEnd, pIndex - 1);
-
-    	return node;
+    
+    public TreeNode buildHelper(int[] inorder, int[] postorder, int inStart, int inEnd, int posStart, int posEnd) {
+        if (posStart > posEnd) {
+            return null;
+        }
+        
+        TreeNode root = new TreeNode(postorder[posEnd]);
+        int rootIndex = 0;
+        
+        for (int i = inStart; i <= inEnd; i++) {
+            if (inorder[i] == postorder[posEnd]) {
+                rootIndex = i;
+                break;
+            }
+        }
+        
+        int leftSize = rootIndex - inStart;
+        int rightSize = inEnd - rootIndex;
+        
+        root.left = buildHelper(inorder, postorder, inStart, rootIndex - 1, posStart, posStart + leftSize - 1);
+        root.right = buildHelper(inorder, postorder, rootIndex + 1, inEnd, posEnd - rightSize, posEnd-1 );
+        
+        return root;
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
