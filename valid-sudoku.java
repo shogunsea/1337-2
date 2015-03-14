@@ -62,3 +62,140 @@ public class Solution {
 		return true;
     }
 }
+
+
+
+public class Solution {
+    public boolean isValidSudoku(char[][] board) {
+        for (int i = 0; i < 9; i++) {
+        	for (int j = 0; j < 9; j++) {
+        		if (board[i][j] != '.') {
+        			if (!isLocalValid(board, i, j)) {
+        				return false;
+        			}
+        		}
+        	}
+        }
+
+        return true;
+    }
+
+    public boolean isLocalValid(char[][] board, int row, int col) {
+    	// check row, col, 3*3 sub matrix valid or not.
+    	int[] count = new int[9];
+    	// row validation:
+		for(int j = 0; j < 9; j++) {
+			if (board[row][j] == '.') {
+				continue;
+			}
+
+			int tempIndex = board[row][j] - '0' - 1;
+			if (count[tempIndex] != 0) {
+				return false;
+			} else {
+				count[tempIndex] = 1;
+			}
+		}
+
+		count = new int[9];
+		// col validation.
+		for (int i = 0; i < 9; i++) {
+			if (board[i][col] == '.') {
+				continue;
+			}
+
+			int tempIndex = board[i][col] - '0' - 1;
+
+			if (count[tempIndex] != 0) {
+				return false;
+			} else {
+				count[tempIndex] = 1;
+			}
+		}
+
+		count = new int[9];
+		// check 3 * 3 submatrix.
+		int rowStart = (row / 3) * 3;
+		int colStart = (col / 3) * 3;
+
+		for (int i = rowStart; i < rowStart + 3; i++) {
+			for (int j = colStart; j < colStart + 3; j++) {
+				if (board[i][j] == '.') {
+					continue;
+				}
+
+				int tempIndex = board[i][j] - '0' - 1;
+
+				if (count[tempIndex] != 0) {
+					return false;
+				} else {
+					count[tempIndex] = 1;
+				}
+			}
+		}
+
+		return true;
+    }
+}
+
+
+
+public class Solution {
+    public void solveSudoku(char[][] board) {
+        solve(board, 0);
+    }
+
+    public boolean solve(char[][] board, int n) {
+        if (n == 81) {
+            return true;
+        }
+
+        int x = n / 9;
+        int y = n % 9;
+
+        if (board[x][y] == '.') {
+            char c = board[x][y];
+            for (char a = '1'; a <= '9'; a++) {
+                board[x][y] = a;
+                if (isValid(board, x, y) && solve(board, n + 1)) {
+                    return true;
+                }
+                board[x][y] = c;
+            }
+            return false;
+        } else {
+            if (solve(board, n + 1)) {
+                return true;
+            }
+            return false;
+        }
+    }
+
+    public boolean isValid(char[][] board, int x, int y){
+        // dont have to count all occurrances in row/col/submatrix.
+        // just check if current char has dups.
+        char c = board[x][y];
+        for (int i = 0; i < 9; i++) {
+            if (i != x && board[i][y] == c) {
+                return false;
+            }
+            if (i != y && board[x][i] == c) {
+                return false;
+            }
+        }
+
+        int xx = x / 3 * 3;
+        int yy = y / 3 * 3;
+
+        for (int i = xx; i < xx + 3; i++) {
+            for (int j = yy; j < yy + 3; j++) {
+                if (x != i && y != j && board[i][j] == c) {
+                    return false;
+                }
+            }
+        }
+
+        return true;
+
+    }
+}

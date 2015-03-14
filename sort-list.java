@@ -138,6 +138,10 @@ public class Solution {
         }
 
         ListNode rightStart = leftEnd.next;
+        // if right half is empty, no need to sort.
+        if(rightStart == null){
+            return null;
+        }
         // split sublists to avoid infinite loop.
         leftEnd.next = null;
         // right half could be empty.

@@ -15,10 +15,18 @@ public class Solution {
     	while(left < right){
     		int tempArea = Math.min(height[left], height[right]) * (right - left);
     		maxArea = maxArea > tempArea? maxArea : tempArea;
+            int preLeft = left;
+            int preRight = right;
     		if(height[left] > height[right]){
     			right--;
+                while (left < right && height[right] < height[preRight]){
+                    right--;
+                }
     		}else{
     			left++;
+                while (left < right && height[left] < height[preLeft]) {
+                    left++;
+                }
     		}
     	}
 

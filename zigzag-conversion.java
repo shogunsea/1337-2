@@ -75,3 +75,41 @@ public class Solution {
             
         
         
+
+
+public class Solution {
+    public String convert(String s, int nRows) {
+        int len = s.length();
+
+        if (len == 0 || nRows == 1) {
+            return s;
+        }
+
+        List<StringBuilder> list = new ArrayList<StringBuilder>();
+
+        for (int i = 0; i < nRows; i++) {
+            list.add(new StringBuilder());
+        }
+
+        // T for period.
+        int t = (nRows - 1) * 2;
+
+        for (int i = 0; i < len; i++) {
+            int tempIndex = i % t;
+            if (tempIndex >= nRows) {
+                tempIndex = (nRows - 1) - (tempIndex - (nRows - 1));
+            }
+
+            StringBuilder sb = list.get(tempIndex);
+            sb.append(s.charAt(i));
+        }
+
+        StringBuilder result = new StringBuilder();
+
+        for (StringBuilder sb : list) {
+            result.append(sb.toString());
+        }
+
+        return result.toString();
+    }
+}

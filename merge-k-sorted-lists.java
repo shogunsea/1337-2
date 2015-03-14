@@ -83,13 +83,7 @@ public class Solution {
 
 		PriorityQueue<ListNode> queue = new PriorityQueue(lists.size(), new Comparator<ListNode>(){
             public int compare(ListNode node1, ListNode node2){
-                if(node1.val < node2.val){
-                    return 1;
-                }else if(node1.val == node2.val){
-                    return 0;
-                }else{
-                    return -1;
-                }
+                return node1.val - node2.val;
             }
         });
 
@@ -105,10 +99,17 @@ public class Solution {
 		while(!queue.isEmpty()){
 			ListNode current = queue.poll();
 			runner.next = current;
-			runner = runner.next;
+		    runner = runner.next;
+		    current = current.next;
+			
+			while (!queue.isEmpty() && current != null && current.val <= queue.peek().val) {
+			    runner.next = current;
+			    runner = runner.next;
+			    current = current.next;
+			}
 
-			if(current.next != null){
-				queue.add(current.next);
+			if(current != null){
+				queue.add(current);
 			}
 		}
 

@@ -1,27 +1,3 @@
-// Given a binary tree, flatten it to a linked list in-place.
-
-// For example,
-// Given
-
-//          1
-//         / \
-//        2   5
-//       / \   \
-//      3   4   6
-// The flattened tree should look like:
-//    1
-//     \
-//      2
-//       \
-//        3
-//         \
-//          4
-//           \
-//            5
-//             \
-//              6
-
-
 /**
  * Definition for binary tree
  * public class TreeNode {
@@ -32,49 +8,65 @@
  * }
  */
 public class Solution {
-  // recursive approach, kind of in-place
-    // public void flatten(TreeNode root) {
-    //     if(root == null) return;
-
-    //     TreeNode left = root.left;
-    //     TreeNode right = root.right;
-
-    //     if(left != null){
-    //       root.right = left;
-    //       root.left = null;
-    //       TreeNode rightMostOnLeftTree = left;
-
-    //       while(rightMostOnLeftTree.right != null){
-    //         rightMostOnLeftTree = rightMostOnLeftTree.right;
-    //       }
-
-    //       rightMostOnLeftTree.right = right;
-    //     }
-
-    //     flatten(root.right);
-    // }
-
-  // in-order traversal approach. need extra list buffer.
+    // two apporaches:
+    // 1.in-order traversal approach by using extra list.
+    // 2.recursive approach: modify tree structrue recursively.
     public void flatten(TreeNode root) {
-        if(root == null) return;
+        if(root == null){
+            return;
+        }
 
-        List<TreeNode> list = new ArrayList<TreeNode>();
-
-        inOrder(list, root);
-
-        for(int i = 0; i < list.size() - 1; i++){
-            TreeNode current = list.get(i);
-            current.left = null;
-            current.right = list.get(i + 1);
+        if(root.val % 2 == 0){
+            method1(root);
+        }else{
+            method2(root);
         }
     }
 
-    public void inOrder(List<TreeNode> list, TreeNode node){
-      if(node == null) return;
+    public void method1(TreeNode node){
+        List<TreeNode> list = new ArrayList<TreeNode>();
+        preOrder(node, list);
 
-      list.add(node);
-      inOrder(list, node.left);
-      inOrder(list, node.right);
+        for(int i = 0; i < list.size(); i++){
+            TreeNode current = list.get(i);
+            if(i != list.size() - 1){
+                current.left = null;
+                current.right  = list.get(i + 1);
+            }
+        }
     }
 
+    public void preOrder(TreeNode node, List<TreeNode> list){
+        if(node == null){
+            return;
+        }
+
+        list.add(node);
+        preOrder(node.left, list);
+        preOrder(node.right, list);
+    }
+
+    public void method2(TreeNode node){
+        if(node == null){
+            return;
+        }
+
+        if(node.left != null){
+            TreeNode left = node.left;
+            TreeNode right = node.right;
+
+            node.right = left;
+            node.left = null;
+
+            TreeNode rightMost = left;
+
+            while(rightMost.right != null){
+                rightMost = rightMost.right;
+            }
+
+            rightMost.right = right;
+        }
+
+        method2(node.right);
+    }
 }

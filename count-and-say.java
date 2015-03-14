@@ -62,3 +62,33 @@ public class Solution {
 }
 
 
+
+
+public class Solution {
+    public String countAndSay(int n) {
+        StringBuilder sb1 = new StringBuilder();
+        StringBuilder sb2 = new StringBuilder();
+        sb1.append('1');
+
+        for (int i = 1; i < n; i++) {
+            int pointer = 0;
+
+            while (pointer < sb1.length()) {
+                int runner = pointer + 1;
+
+                while (runner < sb1.length() && sb1.charAt(runner) == sb1.charAt(runner - 1)) {
+                    runner++;
+                }
+
+                sb2.append(runner - pointer);
+                sb2.append(sb1.charAt(pointer));
+                pointer = runner;
+            }
+
+            sb1 = new StringBuilder(sb2);
+            sb2.setLength(0);
+        }
+
+        return sb1.toString();
+    }
+}

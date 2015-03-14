@@ -99,3 +99,98 @@ public class Solution {
 		return true;
 	}
 }
+
+
+public class Solution {
+    public void solveSudoku(char[][] board) {
+        int n = board.length;
+        if(n != 9){
+            return;
+        }
+        
+        dfsHelper(board, 0);
+    }    
+
+    public boolean dfsHelper(char[][] board, int pos){
+        if (pos == 81) {
+            return true;
+        }
+
+        int row = pos / 9;
+        int col = pos % 9;
+        // check if current is not empty, fill it, or just passed down to next 
+        // index.
+        if (board[row][col] != '.'){
+            if (dfsHelper(board, pos + 1)) {
+                return true;
+            }
+        }else{
+            // current index is not filled yet.
+            for(char k = '1'; k <= '9'; k++){
+                board[row][col] = k;
+                // if current board is valid then we continue the
+                // dfs, otherwise we revert it back.
+                if(isValidAt(board, row, col) && dfsHelper(board, pos + 1)){
+                    return true;
+                }
+
+                board[row][col] = '.';
+            }
+        }
+        
+        return false;
+    }
+    
+    public boolean isValidAt(char[][] board, int i, int j){
+        // 1-9
+        boolean[] occured = new boolean[9];
+        // check row
+        for(int col = 0; col < 9; col++){
+            char c = board[i][col];
+            if(c == '.'){
+                continue;
+            }
+
+            int num = c - '0' - 1;
+            if(occured[num]){
+                return false;
+            }else{
+                occured[num] = true;
+            }
+        }
+        // check col
+        occured = new boolean[9];
+        for(int row = 0; row < 9; row++){
+            char c = board[row][j];
+            if(c == '.'){
+                continue;
+            }
+
+            int num = c - '0' - 1;
+            if(occured[num]){
+                return false;
+            }else{
+                occured[num] = true;
+            }
+        }
+        // check 3*3 cell.
+        occured = new boolean[9];
+        int cellX = (i / 3) * 3;
+        int cellY = (j / 3) * 3;
+        for(int row = cellX; row < cellX + 3; row++){
+            for(int col = cellY; col < cellY + 3; col++){
+                char c = board[row][col];
+                if(c == '.'){
+                    continue;
+                }
+                int num = c - '0' - 1;
+                if(occured[num]){
+                    return false;
+                }else{
+                    occured[num] = true;
+                }
+            }
+        }
+        return true;
+    }
+}

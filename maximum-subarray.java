@@ -19,6 +19,12 @@ public class Solution {
         int max = A[0];
 
         for(int i = 1; i < A.length; i++){
+            // as long as previous sum is positive, it can
+            // contribute to following subarray. however
+            // negative values in the folloing subarry 
+            // might decrease the totalsum, so we need to 
+            // update the global sum with possible
+            // maximal sum.
             sum = sum < 0? A[i] : sum + A[i];
             max = sum > max ? sum : max;
         }

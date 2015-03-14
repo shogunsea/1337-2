@@ -48,3 +48,70 @@ public class Solution {
     	return list;
 	}
 }
+
+
+
+        // handle base case, that is new interval is at the head or tail
+/**
+ * Definition for an interval.
+ * public class Interval {
+ *     int start;
+ *     int end;
+ *     Interval() { start = 0; end = 0; }
+ *     Interval(int s, int e) { start = s; end = e; }
+ * }
+ */
+public class Solution {
+    public List<Interval> insert(List<Interval> intervals, Interval newInterval) {
+        if (newInterval == null) {
+            return intervals;
+        }
+
+        boolean inserted = false;
+        int size = intervals.size();
+
+        if (size == 0) {
+            intervals.add(newInterval);
+            return intervals;
+        }
+
+        List<Interval> res = new ArrayList<Interval>();
+
+        for (int i = 0; i < size; i++) {
+            Interval current = intervals.get(i);
+
+            if (inserted) {
+                // newinterval inserted, just add current.
+                res.add(current);
+                continue;
+            }
+
+            if (!hasIntersection(current, newInterval)) {
+                if (current.start < newInterval.start) {
+                    res.add(current);
+                } else {
+                    res.add(newInterval);
+                    i--;
+                    inserted = true;
+                }
+            } else {
+                newInterval.start = Math.min(newInterval.start, current.start);
+                newInterval.end = Math.max(newInterval.end, current.end);
+            }
+        }
+
+        if (!inserted) {
+            res.add(newInterval);
+        }
+
+        return res;
+    }
+
+    public boolean hasIntersection(Interval a, Interval b) {
+        boolean conditionA = b.end >= a.start && b.end <= a.end;
+        boolean conditionB = b.start >= a.start && b.start <=a.end;
+        boolean conditionC = b.start <= a.start && b.end >= a.end;
+        boolean intersection = conditionA || conditionB || conditionC;
+        return intersection;
+    }
+}

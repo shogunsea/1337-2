@@ -30,3 +30,24 @@ public class Solution {
     	return jumps;
     }
 }
+
+// improved greedy solution, backwards searching.
+public class Solution {
+    public int jump(int[] A) {
+        int len = A.length;
+        int start = len - 1;
+        int step = 0;
+
+        while (start != 0) {
+            for (int i = 0; i < start; i++) {
+                if (A[i] + i >= start) {
+                    step++;
+                    start = i;
+                    break;
+                }
+            }
+        }
+
+        return step;
+    }
+}

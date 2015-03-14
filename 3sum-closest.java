@@ -56,3 +56,58 @@ public class Solution {
     	return sum;
     }
 }
+
+
+public class Solution {
+    public int threeSumClosest(int[] num, int target) {
+        int len = num.length;
+
+        if (len == 0) {
+            return 0;
+        }
+
+        Arrays.sort(num);
+        int res = 0;
+        int err = Integer.MAX_VALUE;
+
+        for (int i = 0; i < len; i++) {
+            if (i != 0 && num[i] == num[i - 1]) {
+                continue;
+            }
+
+            int j = i + 1;
+            int k = len - 1;
+
+            while (j < k) {
+                int temp = num[i] + num[j] + num[k];
+                int tempErr = Math.abs(target - temp);
+
+                if (tempErr < err) {
+                    err = tempErr;
+                    res = temp;
+                }
+
+                if (temp == target) {
+                    return temp;
+                }
+
+                if (temp > target) {
+                    k--;
+
+                    while (j < k && num[k] == num[k + 1]) {
+                        k--;
+                    }
+                } else if (temp < target) {
+                    j++;
+
+                    while (j < k && num[j] == num[j - 1]) {
+                        j++;
+                    }
+                }
+
+            }
+        }
+
+        return res;
+    }
+}

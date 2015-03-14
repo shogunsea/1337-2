@@ -87,3 +87,52 @@ public class Solution {
         return chars;
     }
 }
+
+
+public class Solution {
+    public List<String> letterCombinations(String digits) {
+        List<String> res = new ArrayList<String>();
+        int len = digits.length();
+
+        if (len == 0) {
+            res.add("");
+            return res;
+        }
+
+        StringBuilder sb = new StringBuilder();
+        Map<Integer, char[]> map = buildMap();
+        dfsHelper(res, sb, map, digits, 0);
+
+        return res;
+    }
+
+    public void dfsHelper(List<String> res, StringBuilder sb, Map<Integer, char[]> map, String digits, int index) {
+        if (index == digits.length()) {
+            // found a valid match.
+            res.add(sb.toString());
+            return;
+        }
+
+        int num = digits.charAt(index) - '0';
+        char[] candidates = map.get(num);
+
+        for (int i = 0; i < candidates.length; i++) {
+            sb.append(candidates[i]);
+            dfsHelper(res, sb, map, digits, index + 1);
+            sb.deleteCharAt(sb.length() - 1);
+        }
+    }
+
+    public Map<Integer, char[]> buildMap() {
+        Map<Integer, char[]> map = new HashMap<Integer, char[]>();
+        map.put(2, "abc".toCharArray());
+        map.put(3, "def".toCharArray());
+        map.put(4, "ghi".toCharArray());
+        map.put(5, "jkl".toCharArray());
+        map.put(6, "mno".toCharArray());
+        map.put(7, "pqrs".toCharArray());
+        map.put(8, "tuv".toCharArray());
+        map.put(9, "wxyz".toCharArray());
+        return map;
+    }
+}

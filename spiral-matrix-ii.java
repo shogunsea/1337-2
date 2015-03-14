@@ -50,3 +50,49 @@ public class Solution {
     }
 }
 
+
+public class Solution {
+    public int[][] generateMatrix(int n) {
+        int layer = n / 2;
+        // n % 2 == 0 : done.
+        // n % 2 != 0 : res[x + 1][y + 1] = nextValue.
+        int[][] res = new int[n][n];
+        int nextValue = 1;
+        int x = -1;
+        int y = -1;
+        int currentLayer = 0;
+
+        // A..B
+        // .  .
+        // D..C
+
+        while (currentLayer < layer) {
+        	x++;
+        	y++;
+        	// A to B
+        	while (y < n - 1 - currentLayer) {
+        		res[x][y++] = nextValue++;
+        	}
+        	// B to C
+        	while (x < n - 1 - currentLayer) {
+        		res[x++][y] = nextValue++;
+        	}
+        	// C to D, current layer as offset.
+        	while (y > currentLayer) {
+        		res[x][y--] = nextValue++;
+        	}
+        	// D to A
+        	while (x > currentLayer) {
+        		res[x--][y] = nextValue++;
+        	}
+
+        	currentLayer++;
+        }
+
+        if (n % 2 != 0) {
+        	res[++x][++y] = nextValue;
+        }
+
+        return res;
+    }
+}

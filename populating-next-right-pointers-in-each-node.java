@@ -104,63 +104,90 @@ public class Solution {
     //     connect(root.right);
     // }
 
-    // public void connect(TreeLinkNode root){
-    //     //Solution using constant space.
-    //     if(root == null){
-    //         return;
-    //     }
-
-    //     TreeLinkNode parent = root;
-    //     TreeLinkNode nextLevel = root.left;
-    //     TreeLinkNode leftNode = null;
-
-    //     while(parent != null && nextLevel != null){
-    //         leftNode = null;
-    //         while(parent!=null){
-    //             if(leftNode == null){
-    //                 leftNode = parent.left;
-    //             }else{
-    //                 leftNode.next = parent.left;
-    //                 leftNode = leftNode.next;
-    //             }
-
-    //             leftNode.next = parent.right;
-    //             leftNode = leftNode.next;
-    //             parent = parent.next;
-    //         }
-
-    //         parent = nextLevel;
-    //         nextLevel = parent.left;
-    //     }
-    // }
-
     public void connect(TreeLinkNode root){
+        //Solution using constant space.
         if(root == null){
             return;
         }
 
-        LinkedList<TreeLinkNode> previous = new LinkedList<TreeLinkNode>();
-        LinkedList<TreeLinkNode> current = new LinkedList<TreeLinkNode>();
-        TreeLinkNode tmp = null;
-        previous.add(root);
+        TreeLinkNode parent = root;
+        TreeLinkNode nextLevel = root.left;
+        TreeLinkNode leftNode = null;
 
-        while(!previous.isEmpty()){
+        while(parent != null && nextLevel != null){
+            leftNode = null;
+            while(parent!=null){
+                if(leftNode == null){
+                    leftNode = parent.left;
+                }else{
+                    leftNode.next = parent.left;
+                    leftNode = leftNode.next;
+                }
 
-            while(!previous.isEmpty()){
-                tmp = previous.poll();
-                if(tmp.left !=null){
-                    current.add(tmp.left);
-                    current.add(tmp.right);
-                }
-                if(!previous.isEmpty()){
-                    tmp.next = previous.peek();
-                }
+                leftNode.next = parent.right;
+                leftNode = leftNode.next;
+                parent = parent.next;
             }
 
-            previous = current;
-            current = new LinkedList<TreeLinkNode>();
+            parent = nextLevel;
+            nextLevel = parent.left;
         }
     }
+
+    // public void connect(TreeLinkNode root){
+    //     if(root == null){
+    //         return;
+    //     }
+
+    //     LinkedList<TreeLinkNode> previous = new LinkedList<TreeLinkNode>();
+    //     LinkedList<TreeLinkNode> current = new LinkedList<TreeLinkNode>();
+    //     TreeLinkNode tmp = null;
+    //     previous.add(root);
+
+    //     while(!previous.isEmpty()){
+
+    //         while(!previous.isEmpty()){
+    //             tmp = previous.poll();
+    //             if(tmp.left !=null){
+    //                 current.add(tmp.left);
+    //                 current.add(tmp.right);
+    //             }
+    //             if(!previous.isEmpty()){
+    //                 tmp.next = previous.peek();
+    //             }
+    //         }
+
+    //         previous = current;
+    //         current = new LinkedList<TreeLinkNode>();
+    //     }
+    // }
+
+    // using one queue.
+    // public void connect(TreeLinkNode root) { 
+    //     if (root == null) {
+    //         return;
+    //     }
+
+    //     Queue<TreeLinkNode> queue = new LinkedList<TreeLinkNode>();
+
+    //     queue.add(root);
+    //     int size = 1;
+
+    //     while (!queue.isEmpty()) {
+    //         for (int i = 0; i < size; i++) {
+    //             TreeLinkNode node = queue.poll();
+    //             node.next = i == size - 1? null : queue.peek();
+    //             if (node.left != null) {
+    //                 queue.add(node.left);
+    //             }
+    //             if (node.right != null) {
+    //                 queue.add(node.right);
+    //             }
+    //         }
+
+    //         size = queue.size();
+    //     }
+    // }
 }
 
 

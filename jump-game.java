@@ -9,6 +9,7 @@
 
 // A = [3,2,1,0,4], return false.
 
+// Greedy : O(n)
 public class Solution {
     public boolean canJump(int[] A) {
  		int len = A.length;
@@ -24,5 +25,30 @@ public class Solution {
         }
 
         return true;
+    }
+}
+
+// dp : O(n^2) at worst case.
+public class Solution {
+    public boolean canJump(int[] A) {
+        int len = A.length;
+
+        if (len <= 1) {
+            return true;
+        }       
+
+        boolean[] dp = new boolean[len];
+        dp[0] = true;
+
+        for (int j = 1; j < len; j++) {
+            for (int i = j - 1; i >= 0; i--) {
+                if (A[i] + i >= j && dp[i]) {
+                    dp[j] = true;
+                    break;
+                }
+            }
+        }
+
+        return dp[len - 1];
     }
 }

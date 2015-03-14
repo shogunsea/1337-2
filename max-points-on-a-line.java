@@ -18,8 +18,7 @@ public class Solution {
         	// Iterate over all the points in the array.
         	slopeCount = new HashMap<Double, Integer>();
         	Point first = points[i];
-        	int tmpMax = 0;
-        	int duplicates = 1;
+        	int duplicates = 0;
 
         	for(int j = 0; j < len; j++){
         		// If two comparing points are identical, skip the other one.
@@ -38,11 +37,14 @@ public class Solution {
         		slopeCount.put(slope, slopeCount.containsKey(slope)? slopeCount.get(slope) + 1 : 1 );
         	}
 
+            int pointsExceptFirst = 0; // assume no other points in the line.
         	for(int n : slopeCount.values()){
-        		tmpMax = tmpMax > i? tmpMax : n;
+        		pointsExceptFirst = pointsExceptFirst > n? pointsExceptFirst : n;
         	}
 
-        	tmpMax += duplicates;
+            // tempMax should be: first point itself, dups, other points.
+            int tmpMax = 1 + duplicates + pointsExceptFirst; 
+
         	maxPoint = maxPoint > tmpMax? maxPoint : tmpMax;
         }
 

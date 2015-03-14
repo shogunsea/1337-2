@@ -44,3 +44,80 @@ public class Solution {
     	return miss;
     }
 }
+
+
+
+
+public class Solution {
+    // O(n) time adn O(n) space solution.
+    // public int firstMissingPositive(int[] A) {
+    //     int len = A.length;
+
+    //     if (len == 0) {
+    //      return 1;
+    //     }
+
+    //     HashMap<Integer, Integer> map = new HashMap<Integer, Integer>();
+
+    //     for (int i : A) {
+    //      map.put(i, 0);
+    //     }
+
+    //     for (int i = 0; i < len; i++) {
+    //      if (!map.containsKey(i + 1)) {
+    //          return i + 1;
+    //      }
+    //     }
+
+    //     return len + 1;
+    // }
+
+    public int firstMissingPositive(int[] A) {
+        int len = A.length; 
+
+        if (len == 0) {
+            return 1;
+        }
+
+        int pos = -1;
+
+        for (int i = 0; i < len; i++) {
+            if (A[i] > 0) {
+                // swap positive values to left half of the array.
+                int temp = A[++pos];
+                A[pos] = A[i];
+                A[i] = temp;
+            }
+        }
+
+        
+        for (int i = 0; i <= pos; i++) {
+            // why use abs here: cound be negated by pos index that appeared
+            // before it.
+            int posIndex = Math.abs(A[i]) - 1;
+            // if posIndex is greater than pos, we dont bother to go further,
+            // becauze after pos index, all elemnts are negative, and we dont care
+            // about elemnts that appear after first missing positive.
+            if (posIndex > pos) {
+                continue;
+            } else {
+                A[posIndex] = A[posIndex] < 0? A[posIndex] : -A[posIndex];
+            }
+        }
+
+        // next index, if no missing.
+        int miss = pos + 1;
+
+        for (int i = 0; i <= pos; i++) {
+            if (A[i] > 0) {
+                miss = i;
+                break;
+            }
+        }
+
+        // index to number.
+        return miss + 1;
+
+    }
+
+}

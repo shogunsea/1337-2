@@ -127,3 +127,63 @@ public class Solution {
         return current;
     }
 }
+
+
+
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode(int x) {
+ *         val = x;
+ *         next = null;
+ *     }
+ * }
+ */
+public class Solution {
+    public ListNode reverseKGroup(ListNode head, int k) {
+        if (head == null || head.next == null || k == 1) {
+            return head;
+        }
+
+        ListNode dummy = new ListNode(1);
+        dummy.next = head;
+        ListNode runner = dummy;
+
+        while (runner != null) {
+            ListNode start = runner;
+            int count = k;
+
+            while (count != 0 && runner != null) {
+                runner = runner.next;
+                count--;
+            }
+
+            if (runner != null) {
+                ListNode tail = runner.next;
+                runner = reverse(start, tail);
+            }
+        }
+
+        return dummy.next;
+    }
+
+    public ListNode reverse(ListNode head, ListNode tail) {
+        ListNode start = head.next;
+        ListNode runner = start;
+        ListNode previous = null;
+
+        while (runner != tail) {
+            ListNode next = runner.next;
+            runner.next = previous;
+            previous = runner;
+            runner = next;
+        }
+
+        head.next = previous;
+        start.next = tail;
+
+        return start;
+    }
+}

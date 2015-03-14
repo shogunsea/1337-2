@@ -54,3 +54,41 @@ public class Solution {
        	}
     }
 }
+
+
+
+public class Solution {
+    public void rotate(int[][] matrix) {
+        int row = matrix.length;
+
+        if (row == 0) {
+            return;
+        }
+
+        int col = matrix[0].length;
+        int layer = row / 2;
+        int count = 0;
+
+        while (count < layer) {
+            int[] A = {count, count};// x, y
+              int[] B = {count, col - 1 - count};
+              int[] C = {row - 1 - count, col - 1 - count};
+              int[] D = {row - 1 - count, count};
+
+              while (A[1] < col - 1 - count) {
+                  int temp = matrix[A[0]][A[1]];
+                  matrix[A[0]][A[1]] = matrix[D[0]][D[1]];
+                  matrix[D[0]][D[1]] = matrix[C[0]][C[1]];
+                  matrix[C[0]][C[1]] = matrix[B[0]][B[1]];
+                  matrix[B[0]][B[1]] = temp;
+                  A[1]++;
+                  B[0]++;
+                  C[1]--;
+                  D[0]--;
+              }
+
+              count++;
+        }
+
+    }
+}

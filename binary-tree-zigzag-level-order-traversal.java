@@ -30,82 +30,85 @@ public class Solution {
 
 	// recursive solution: pass down level index, odd level: insert at 0, even append at last. or vice versa.
 	// 		each recursion check if current level has already been visited or not.
-    // public List<List<Integer>> zigzagLevelOrder(TreeNode root) {
-    //     List<List<Integer>> result = new ArrayList<List<Integer>>();
-    //     if(root == null) return result;
+    public List<List<Integer>> zigzagLevelOrder(TreeNode root) {
+        List<List<Integer>> result = new ArrayList<List<Integer>>();
+        if(root == null) return result;
 
-    //     dfs(result, root, 0);
+        dfs(result, root, 0);
 
-    //     return result;
-    // }
+        return result;
+    }
 
-    // public void dfs(List<List<Integer>> result, TreeNode node, int level){
-    // 	if(node == null) return;
+    public void dfs(List<List<Integer>> result, TreeNode node, int level){
+    	if(node == null) return;
 
-    // 	List<Integer> tempList;
+    	List<Integer> tempList;
 
-    // 	if(result.size() > level){
-    // 		// current level has already been visited so far.
-    // 		tempList = result.get(level);
-    // 	}else{
-    // 		tempList = new ArrayList<Integer>();
-    // 		result.add(tempList);
-    // 	}
-    // 	// check if current level is odd or even.
-    // 	// even: left -> right
-    // 	// odd : right -> left
-    // 	if(level % 2 == 0){
-    // 		tempList.add(node.val);
-    // 	}else{
-    // 		if(tempList.size() == 0){
-    // 			tempList.add(node.val);
-    // 		}else{
-    // 			tempList.add(0, node.val);
-    // 		}
-    // 	}
+    	if(result.size() > level){
+    		// current level has already been visited so far.
+    		tempList = result.get(level);
+    	}else{
+    		tempList = new ArrayList<Integer>();
+    		result.add(tempList);
+    	}
+    	// check if current level is odd or even.
+    	// even: left -> right
+    	// odd : right -> left
+    	if(level % 2 == 0){
+    		tempList.add(node.val);
+    	}else{
+    		if(tempList.size() == 0){
+    			tempList.add(node.val);
+    		}else{
+    			tempList.add(0, node.val);
+    		}
+    	}
 
-    // 	dfs(result, node.left, level + 1);
-    // 	dfs(result, node.right, level + 1);
-    // }
+    	dfs(result, node.left, level + 1);
+    	dfs(result, node.right, level + 1);
+    }
 
     // iterative solution.
     public List<List<Integer>> zigzagLevelOrder(TreeNode root) {
-    	List<List<Integer>> result = new ArrayList<List<Integer>>();
-    	if(root == null) return result;
-    	Stack<TreeNode> queue = new Stack<TreeNode>();
-    	queue.push(root);
-    	int level = 0;
+        List<List<Integer>> res = new ArrayList<List<Integer>>();
+        if (root == null) {
+            return res;
+        }   
 
-    	while(!queue.isEmpty()){
-    		level++;
-    		List<Integer> list = new ArrayList<Integer>();
-    		for(TreeNode node : queue){
-    			list.add(node.val);
-    		}
-    		result.add(list);
+        List<Integer> tempList;
+        Stack<TreeNode> st = new Stack<TreeNode>();
+        Stack<TreeNode> tempSt;
+        int level = 0;
+        int size = 1;
+        st.push(root);
 
-    		Stack<TreeNode> tempQ = new Stack<TreeNode>();
-    		while(!queue.isEmpty()){
-    			TreeNode node = queue.pop();
-    			if(level % 2 == 0){
-    				if(node.left != null){
-    					tempQ.push(node.left);
-    				}
-    				if(node.right != null){
-    					tempQ.push(node.right);
-    				}
-    			}else{
-    				if(node.right != null){
-    					tempQ.push(node.right);
-    				}
-    				if(node.left != null){
-    					tempQ.push(node.left);
-    				}
-    			}
-    		}
-    		queue = tempQ;
-    	}
-
-    	return result;
+        while (!st.isEmpty()) {
+            tempList = new ArrayList<Integer>();
+            tempSt = new Stack<TreeNode>();
+            for (int i = 0; i < size; i++) {
+                TreeNode node = st.pop();
+                tempList.add(node.val);
+                if (level % 2 != 0) {
+                    if (node.right != null) {
+                        tempSt.push(node.right);
+                    }
+                    if (node.left != null) {
+                        tempSt.push(node.left);
+                    }
+                } else {
+                    if (node.left != null) {
+                        tempSt.push(node.left);
+                    }
+                    if (node.right != null) {
+                        tempSt.push(node.right);
+                    }
+                }
+            }
+            res.add(new ArrayList<Integer>(tempList));
+            st = tempSt;
+            size = st.size();
+            level++;
+        }
+        return res;
     }
 }

@@ -4,40 +4,42 @@
 
 // You are given a target value to search. If found in the array return its index, otherwise return -1.
 
-// You may assume no duplicate exists in the array.
+public class Solution{
+    public int search(int[] A, int target){
+        //if only one pivot exists in the array and no duplicates.
+        int len = A.length;
 
-public class Solution {
-    public int search(int[] A, int target) {
-    	int len = A.length;
+        if(len == 0) return -1;
 
-    	if(len == 0) return -1;
+        int left = 0;
+        int right = len - 1;
 
-    	int start = 0;
-    	int end = len - 1;
+        while(left <= right){
+            int mid = (left + right) / 2;
 
-    	while(start <= end){
-    		int mid = (start + end) / 2;
-
-    		if(A[mid] == target){
-    			return mid;
-    		}else if(A[mid] < A[end]){
-    			// right half is sorted.
-    			if(A[mid] < target && A[end] >= target){
-    				start = mid + 1;
-    			}else{
-    				end = mid - 1;
-    			}
-    		}else {
-    		//if(A[mid] > A[start]){
-    			// left half is sorted.
-    			if(A[mid] > target && A[start] <= target){
-    				end = mid - 1;
-    			}else{
-    				start = mid + 1;
-    			}
-    		}
-    	}
-
-    	return -1;
+            if(A[mid] == target){
+                return mid;
+            }else if(A[mid] <= A[right]){
+                // if right half is sorted
+                if(target <= A[right] && target > A[mid]){
+                    // target value is in right half.
+                    left = mid + 1;
+                }else{
+                    // though right half is sorted, but target value is still in left half.
+                    right = mid - 1;
+                }
+            }else if(A[mid] >= A[left]){
+                // if left half is sorted
+                if(target >= A[left] && target < A[mid]){
+                    // target value is in left half.
+                    right = mid -1;
+                }else{
+                    // target value is in right half.
+                    left = mid + 1;
+                }
+            }
+        }
+        return -1;  
     }
+
 }

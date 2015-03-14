@@ -9,13 +9,23 @@
 
 public class Solution {
     public int removeDuplicates(int[] A) {
-        if(A.length == 0) return 0;
-        int counter = 0;
-        for(int i = 1; i < A.length; i++){
-        	if(A[counter] == A[i]) continue;
-        	A[++counter] = A[i];
+        int len = A.length;
+
+        if(len == 0) return len;
+
+        int slow = 0;
+        // fast starts from 0 or 1 both pass
+        int fast = 1;
+
+        while(fast < len){
+            if(A[fast] == A[slow]){
+                fast++;
+            }else{
+                // fast++ or fast, both pass all test cases.
+                A[++slow] = A[fast++];
+            }
         }
 
-        return counter + 1;
+        return ++slow;
     }
 }

@@ -76,12 +76,92 @@ public class Solution{
 
 
 
+public class Solution {
+    public List<String[]> solveNQueens(int n) {
+        List<String[]> res = new ArrayList<String[]>();
+        // try to fill the first row by each possible index.
+        int[] qPosition = new int[n];
 
+        // what should be a proper condition?
+        if (n < 1) {
+            return res;
+        }
 
+        // initialize the initial index for each row as -1.
+        for (int i = 0; i < n; i++) {
+            qPosition[i] = -1;
+        }
 
+        for (int i = 0; i < n; i++) {
+            qPosition[0] = i;
+            dfsHelper(res, qPosition, 1);
+            // backtracking.
+            qPosition[0] = -1;
+        }
 
+        return res;
+    }
 
+    public void dfsHelper(List<String[]> res, int[] qPosition, int row) {
+        if (row == qPosition.length) {
+            // find a valid match. build a string array base
+            // on the value of qposition.
+            String[] temp = new String[qPosition.length];
 
+            for (int i = 0; i < qPosition.length; i++) {
+                // board is n by n.
+                StringBuilder sb = new StringBuilder();
 
+                for (int j = 0; j < qPosition.length; j++) {
+                    if (qPosition[i] == j) {
+                        sb.append('Q');
+                    } else {
+                        sb.append('.');
+                    }
+                }
 
+                temp[i] = sb.toString();
+            }
+
+            res.add(temp);
+
+            return;
+        }
+
+        // when trying all indexes at current row, should
+        // check all rows above current row, dont have to check
+        // whether if they are in the same row, just need to
+        // check if they are in the same col, and diagonals.
+        for (int i = 0; i < qPosition.length; i++) {
+            // try all possible indexes at current row.
+            if (isValid(qPosition, row, i)) {
+                qPosition[row] = i;
+                dfsHelper(res, qPosition, row + 1);
+                // revert back to default value.
+               qPosition[row] = -1;
+            } 
+        }
+    }
+
+    public static boolean isValid(int[] qPosition, int curRow, int curCol) {
+        for (int preRow = 0; preRow < curRow; preRow++) {
+            int preCol = qPosition[preRow];
+
+            if (preCol == curCol) {
+                // in the same col;
+                return false;
+            }
+
+            // check diagonal.
+            int colDiff = Math.abs(curCol - preCol);
+            int rowDiff = Math.abs(curRow - preRow);
+
+            if (colDiff == rowDiff) {
+                return false;
+            }
+        }
+        
+        return true;
+    }
+}
 

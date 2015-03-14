@@ -27,3 +27,29 @@ public class Solution {
 		return len;       
     }
 }
+
+public class Solution {
+    public int lengthOfLastWord(String s) {
+        int len = s.length();
+
+        if (len == 0) {
+        	return 0;
+        }
+
+        for (int i = len - 1; i >= 0; i++) {
+        	if (s.charAt(i) == ' ') {
+        		continue;
+        	} else {
+        		int j = i - 1;
+
+        		while (j >= 0 && s.charAt(j) != ' ') {
+        			j--;
+        		}
+
+        		return i - j;
+        	}
+        }
+
+        return 0;
+    }
+}

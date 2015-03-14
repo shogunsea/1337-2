@@ -31,6 +31,8 @@ public class Solution {
             		list.add(matrix[i][col - 1 - coveredLayer]);
             	}
 
+            	// if current sub-matrix only contains one row or one col, then should break,
+            	// since all elements in it have been added to the list.
             	if(coveredLayer * 2 + 1 ==row || coveredLayer * 2 + 1 == col){
             		break;
             	}

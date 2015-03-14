@@ -43,3 +43,109 @@ public class Solution {
 		return tempHead.next;
     }
 }
+
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode(int x) {
+ *         val = x;
+ *         next = null;
+ *     }
+ * }
+ */
+public class Solution {
+    public ListNode swapPairs(ListNode head) {
+        if (head == null || head.next == null) {
+            return head;
+        }
+
+        ListNode dummy = new ListNode(1);
+        dummy.next = head;
+        ListNode current = head;
+        ListNode pre = dummy;
+
+        while (current != null && current.next != null) {
+            ListNode next = current.next;
+            ListNode nextCurrent = next.next;
+            pre.next = next;
+            next.next = current;
+            current.next = nextCurrent;
+            pre = current;
+            current = nextCurrent;
+        }
+
+        return dummy.next;
+    }
+}
+
+
+
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode(int x) {
+ *         val = x;
+ *         next = null;
+ *     }
+ * }
+ */
+public class Solution {
+    public ListNode swapPairs(ListNode head) {
+        if (head == null || head.next == null) {
+        	return head;
+        }
+
+        ListNode evenDummy = new ListNode(1);
+        ListNode oddDummy = new ListNode(2);
+        ListNode runner = head;
+        int counter = 0;
+        ListNode evenRunner = evenDummy;
+        ListNode oddRunner = oddDummy;
+
+        while (runner != null) {
+            ListNode next = runner.next;
+            if (counter % 2 == 0) {
+                evenRunner.next = runner;
+                evenRunner = evenRunner.next;
+                evenRunner.next = null;
+            } else {
+                oddRunner.next = runner;
+                oddRunner = oddRunner.next;
+                oddRunner.next = null;
+            }
+
+            runner = next;
+            counter++;
+        }  
+
+        ListNode mergeDummy = new ListNode(3);
+        ListNode mergeRunner = mergeDummy;
+        evenRunner = evenDummy.next;
+        oddRunner = oddDummy.next;
+
+        while (evenRunner != null || oddRunner != null) {
+            if (oddRunner != null) {
+                mergeRunner.next = oddRunner;
+                oddRunner = oddRunner.next;
+                mergeRunner = mergeRunner.next;
+                mergeRunner.next = null;
+            }
+            if (evenRunner != null) {
+                mergeRunner.next = evenRunner;
+                evenRunner = evenRunner.next;
+                mergeRunner = mergeRunner.next;
+                mergeRunner.next = null;
+            }
+        }
+
+        return mergeDummy.next;
+
+    }
+}
+
+
+

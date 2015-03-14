@@ -1,12 +1,12 @@
-// Given an array of integers, every element appears twice except for one. Find that single one.
-
-// Note:
-// Your algorithm should have a linear runtime complexity. Could you implement it without using extra memory?
-
-public class Solution{
-    public int singleNumber(int[] x){
+public class Solution {
+    public int singleNumber(int[] A) {
+        // XOR operation: add without carry 0^0 = 0; 1^0 = 1, 1^1=0
+        // same bit appear twice will get cleared out.
         int res = 0;
-        for(int i : x) res ^= i;
+        for (int i : A) {
+            res ^= i;
+        }
+        
         return res;
     }
 }

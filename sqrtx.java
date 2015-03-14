@@ -4,21 +4,30 @@
 
 public class Solution {
     public int sqrt(int x) {
-    	int high = x / 2 + 1;
-    	int low = 0;
+    	if (x <= 1) {
+            return x;
+        }
 
-    	while(high >= low){
-    		int mid = (high + low) / 2;
-    		int sq = mid * mid;
-    		if(sq == x){
-    			return mid;
-    		}else if(sq < x){
-    			low = mid + 1;
-    		}else{
-    			high = mid - 1;
-    		}
-    	}
+        int start = 0;
+        int end = x / 2;
 
-    	return high;
+        while (start + 1 < end) {
+            int mid = (start + end) / 2;
+            long tempRes = (long)mid * mid;
+            if (tempRes >= x) {
+                end = mid;
+            } else {
+                start = mid;
+            }
+        }
+
+        long startRes = (long)start * start;
+        long endRes = (long)end * end;
+
+        if (endRes > x) {
+            return start;
+        } else {
+            return end;
+        }
 	}
 }

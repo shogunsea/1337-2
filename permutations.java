@@ -79,3 +79,48 @@ public class Solution {
     	}
     }
 }
+
+
+
+public class Solution {
+    public List<List<Integer>> permute(int[] num) {
+        List<List<Integer>> res = new ArrayList<List<Integer>>();
+        int len = num.length;
+
+        if (len == 0) {
+            return res;
+        }  
+
+        List<Integer> tempList = new ArrayList<Integer>();
+        boolean[] used = new boolean[len];
+
+        for (int i = 0; i < len; i++) {
+            // each element as first in the list.
+            tempList.add(num[i]);
+            used[i] = true;
+            dfsHelper(res, tempList, num, used);
+            used[i] = false;
+            tempList.remove(tempList.size() - 1);
+        }
+
+        return res;
+    }
+
+    public void dfsHelper(List<List<Integer>> res, List<Integer> tempList, int[] num, boolean[] used) {
+        if (tempList.size() == num.length) {
+            res.add(new ArrayList<Integer>(tempList));
+            return;
+        }
+
+        for (int i = 0; i < num.length; i++) {
+            if (!used[i]) {
+                tempList.add(num[i]);
+                used[i] = true;
+                dfsHelper(res, tempList, num, used);
+                used[i] = false;
+                tempList.remove(tempList.size() - 1);
+
+            }
+        }
+    }
+}

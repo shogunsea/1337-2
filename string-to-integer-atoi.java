@@ -43,3 +43,65 @@ public class Solution {
    		return positive? (int)res : -(int)res;
 	}
 }
+
+
+
+public class Solution {
+    public int atoi(String str) {
+        int res = 0;
+        int len = str.length();
+
+        if (len == 0) {
+         return res;
+        }
+
+        char[] ss = str.toCharArray();
+        // remove the leading white spaces.
+         int start = 0;
+         boolean isNeg = false;
+         boolean overflow = false;
+
+        for (int i = 0; i < len; i++) {
+         char c = ss[i];
+         if (c != ' ') {
+            if (c == '-' || c == '+') {
+               isNeg = c == '-'? true : false;
+               start = i + 1;
+            } else {
+               start = i;
+            }
+            break;
+         }
+        }
+
+
+        for (int i = start; i < len; i++) {
+         int num = ss[i] - '0';
+
+         if (num > 9 || num < 0) {
+            // invalid number.
+            break;
+         }
+
+         int tenTimes = res * 10;
+
+         if (tenTimes / 10 != res) {
+            overflow = true;
+            break;
+         }
+
+         res = res * 10 + num;
+
+         if (res < 0) {
+            overflow = true;
+            break;
+         }
+        }
+
+        if (overflow) {
+         return isNeg? Integer.MIN_VALUE : Integer.MAX_VALUE;
+        }
+
+        return isNeg? -res : res;
+    }
+}

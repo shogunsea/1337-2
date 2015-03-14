@@ -20,8 +20,17 @@ public class Solution {
 
         for(int i = 0; i <= len; i++){
         	int current = (i == len)? -1 : heights[i];
+            // find first element that is decreasing.
+            // if we come to the while loop, stack contains
+            // all large values that are greater than current
+            // elements, we can iterate through them, with each
+            // element as left bound, each elements right index 
+            // minus current index as width, each elements value
+            // as height.
         	while(!st.isEmpty() && current < heights[st.peek()]){
         		int height = heights[st.pop()];
+                // is stack is empty, we should calculate
+                // the rectangle which covers up to current index i.
         		int width = st.isEmpty()? i : i - st.peek() - 1;
         		max = max < (height * width)? height * width : max;
         	}
