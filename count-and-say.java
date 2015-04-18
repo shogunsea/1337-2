@@ -92,3 +92,43 @@ public class Solution {
         return sb1.toString();
     }
 }
+
+public class Solution {
+    public String countAndSay(int n) {
+        if (n < 1) {
+            return "";
+        }
+        StringBuilder sb = new StringBuilder();
+        StringBuilder tempSb = new StringBuilder();
+        sb.append(1);
+        
+        
+        // 1
+        // 11
+        // 21
+        // 1211
+        // 111221
+        // 
+        for (int i = 1; i < n; i++) {
+            // generate i-th string.
+            tempSb.setLength(0);
+            int len = sb.length();
+            int pos = 0;
+            
+            while (pos < len) {
+                int tempPos = pos + 1;
+                while (tempPos < len && sb.charAt(tempPos) == sb.charAt(tempPos-1)) {
+                    tempPos++;
+                }
+                int times = tempPos - pos;
+                tempSb.append(times);
+                tempSb.append(sb.charAt(pos));
+                pos = tempPos;
+            }
+            
+            sb = new StringBuilder(tempSb);
+        }
+        
+        return sb.toString();
+    }
+}

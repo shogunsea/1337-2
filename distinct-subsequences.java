@@ -64,4 +64,49 @@ public class Solution {
 
     	return dp[row - 1][col - 1];
     }
+
+    public static int distinctSub(String row, String col) {
+        // longer string as row
+//        if (row.length() < col.length()) {
+//            return distinctSub(col, row);
+//        }
+
+        int rowLen = row.length();
+        int colLen = col.length();
+        if (rowLen == 0 || colLen == 0) {
+            return 0;
+        }
+        int[][] dp =  new int[rowLen][colLen];
+        // dp[i][j]: pick i chars from row, j chars from col. Number of different
+        //      subsequences of col[:j] in row[:i]
+        // initialize first col, only lower half of the matrix will be filled.
+        for (int i = 0; i < rowLen; i++) {
+            for (int j = 0; j < colLen; j++) {
+                if (j > i) {
+                    // index of shorter string is bigger: invalid
+                    continue;
+                }
+
+                char rowChar = row.charAt(i);
+                char colChar = col.charAt(j);
+
+                if (rowChar == colChar) {
+                    if (j == 0 && i != 0) {
+                        dp[i][j] = dp[i - 1][j] + 1;
+                    } else if (i != 0){
+                        dp[i][j] = dp[i - 1][j - 1] + dp[i - 1][j];
+                    } else {
+                        // i == 0 && j == 0
+                        dp[i][j] = 1;
+                    }
+                } else {
+                    if (i != 0) {
+                        dp[i][j] = dp[i - 1][j];
+                    }
+                }
+            }
+        }
+
+        return dp[rowLen - 1][colLen - 1];
+    }
 }

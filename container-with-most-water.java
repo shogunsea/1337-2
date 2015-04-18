@@ -33,3 +33,28 @@ public class Solution {
     	return maxArea;
     }
 }
+
+
+public class Solution {
+    public int maxArea(int[] height) {
+        int len = height.length;
+
+        if(len < 2) return 0;
+
+        int left = 0;
+        int right = len - 1;
+        int maxArea = 0;
+
+        while(left < right){
+            int tempArea = Math.min(height[left], height[right]) * (right - left);
+            maxArea = maxArea > tempArea? maxArea : tempArea;
+            if(height[left] > height[right]){
+                right--;
+            }else{
+                left++;
+            }
+        }
+
+        return maxArea;
+    }
+}

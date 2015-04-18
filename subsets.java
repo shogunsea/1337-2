@@ -47,3 +47,31 @@ public class Solution {
     	}
     }
 }
+
+
+// Bit + Math solution.
+public class Solution {
+    public List<List<Integer>> subsets(int[] S) {
+        List<List<Integer>> res = new ArrayList<List<Integer>>();
+        int len = S.length;
+        if (len == 0) {
+            return res;
+        }
+        
+        int pow = (int)Math.pow(2, len);
+        
+        Arrays.sort(S);
+        
+        for (int i = 0; i < pow; i++) {
+            List<Integer> tempList = new ArrayList<Integer>();
+            for (int j = 0; j < len; j++) {
+                int p = 1 << j;
+                if ((p & i) != 0) {
+                    tempList.add(S[j]);
+                }
+            }
+            res.add(tempList);
+        }
+        return res;
+    }
+}

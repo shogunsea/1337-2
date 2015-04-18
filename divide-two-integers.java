@@ -48,3 +48,37 @@ public class Solution {
         return ~x + 1;
     }
 }
+
+
+public class Solution {
+    public int divide(int dividend, int divisor) {
+        boolean isNeg = dividend > 0? divisor < 0 : divisor > 0;
+
+        long dvd  = Math.abs((long)dividend);
+        long dvs = Math.abs((long)divisor);
+        long doubledTimes = 0;
+        // double the value of divisor as close to dividend as possible
+        while (dvd >= (dvs << 1)) {
+            dvs = dvs << 1;
+            doubledTimes++;
+        }
+
+        long res = 0;
+        while (doubledTimes >= 0) {
+            if (dvd >= dvs) {
+                dvd -= dvs;
+                res += (1L << doubledTimes);
+            }
+            doubledTimes--;
+            dvs = dvs >> 1;
+
+        }
+
+        if (res > Integer.MAX_VALUE) {
+            return isNeg? Integer.MIN_VALUE : Integer.MAX_VALUE;
+        }
+
+        return isNeg? (int)(-res) : (int)res;
+
+    }
+}
