@@ -30,3 +30,77 @@ public class Solution {
     	}
     }
 }
+
+
+/**
+ * Definition for binary tree
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode(int x) { val = x; }
+ * }
+ */
+public class Solution {
+    class Data {
+        boolean isValid;
+        int min;
+        int max;
+        Data(int min, int max, boolean isValid) {
+            this.min = min;
+            this.max = max;
+            this.isValid = isValid;
+        }
+    }
+
+    public boolean isValidBST(TreeNode root) {
+        Data res = helper(root);
+        return res == null || res.isValid;
+    }
+
+    public Data helper(TreeNode node) {
+        if (node == null) {
+            return null;
+        }
+
+        Data left = helper(node.left);
+        Data right = helper(node.right);
+        Data res = new Data(0,0, false);
+
+       // left invalid
+        if (left != null && !left.isValid) {
+            return res;
+        }
+        // right invalid
+        if (right != null && !right.isValid) {
+            return res;
+        }
+
+        if (left == null) {
+            res.min = node.val;
+        } else {
+            if (left.max >= node.val || left.min >= node.val) {
+                res.isValid = false;
+                return res;
+            } else {
+                res.min = left.min;
+            }
+        }
+
+        if (right == null) {
+            res.max = node.val;
+        } else {
+            if (right.min <= node.val ) {
+
+                res.isValid = false;
+                return res;
+            } else {
+                res.max = right.max;
+            }
+        }
+
+        res.isValid = true;
+
+        return res;
+    }
+}
